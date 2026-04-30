@@ -1,112 +1,117 @@
-# 🖥️ Simple Website Overlay App
+<p align="center">
+    <a href="https://pogly.gg#gh-dark-mode-only" target="_blank">
+	<img width="128" src="./images/dark/Pog.png" alt="Pogly Logo">
+    </a>
+    <a href="https://pogly.gg#gh-light-mode-only" target="_blank">
+	<img width="128" src="./images/light/Pog.png" alt="Pogly Logo">
+    </a>
+</p>
+<p align="center">
+    <a href="https://pogly.gg#gh-dark-mode-only" target="_blank">
+        <img width="250" src="./images/dark/pogly-text.png" alt="Pogly">
+    </a>
+    <a href="https://pogly.gg#gh-light-mode-only" target="_blank">
+        <img width="250" src="./images/light/pogly-text.png" alt="Pogly">
+    </a>
+    <p style="font-style: italic; line-height: 0" align="center">
+        Desktop Overlay — display your Pogly module directly on screen
+    </p>
+</p>
 
-Display any website as a transparent, click-through overlay on your screen. I made this for a specific case scenario so all windows are scaled to 1920x1080 and then expanded to your actual screen size.
+<p align="center">
+    <a href="https://github.com/PoglyApp/pogly-cloud"><img src="https://img.shields.io/badge/built_for-Pogly_Cloud-6441a5.svg?style=flat-square" /></a>
+    &nbsp;
+    <img src="https://img.shields.io/badge/built_with-Electron-47848F.svg?style=flat-square" />
+    &nbsp;
+    <a href="https://github.com/PoglyApp/pogly-desktop-overlay/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-50C878.svg?style=flat-square" /></a>
+</p>
 
-**If you have a Stream Deck, I suggest adding a 'Hotkey' button and bind it to an odd function-key like F24**
+<p align="center">
+    <a href="https://discord.gg/pogly"><img height="25" src="./images/social/discord.svg" alt="Discord" /></a>
+    &nbsp;
+    <a href="https://www.twitch.tv/poglygg"><img height="25" src="./images/social/twitch.svg" alt="Twitch" /></a>
+    &nbsp;
+    <a href="https://www.youtube.com/@PoglyApp"><img height="25" src="./images/social/youtube.svg" alt="YouTube" /></a>
+    &nbsp;
+    <a href="https://x.com/PoglyApp"><img height="25" src="./images/social/twitter.svg" alt="Twitter" /></a>
+</p>
 
-## If you're not a nerd and just want the download, [just click here.](https://github.com/mopoIo/Simple-Website-Overlay-App/releases/tag/1.0.0)
+<br>
 
----
+## What is Pogly Desktop Overlay?
 
-## ✨ Features
+[Pogly](https://pogly.gg) is a real-time collaborative stream overlay — think Figma, but for your OBS sources. This companion app lets you display your Pogly module as a **transparent, click-through overlay directly on your desktop**, so your overlay is always visible while you game without needing OBS in the foreground.
 
-- 🌐 Load any website as an overlay
-- 🔍 Adjustable transparency levels (25% - 100%)
-- ⌨️ Customizable hotkey for quick toggling
-- 🎯 Click-through functionality - won't interfere with other windows
-- 📌 Always-on-top capability
-- 🎚️ Easy controls via system tray
-- 💾 Automatic settings persistence
-- 📐 Smart scaling to maintain aspect ratio
+## Getting Started
 
-## 📖 How to Use
+### Download
+
+Grab the latest release from the [releases page](https://github.com/PoglyApp/pogly-desktop-overlay/releases).
 
 ### First Launch
-1. When you first start the app, you'll be prompted to enter a website URL
-2. Default hotkey is set to F24
-3. Default opacity is set to 50%
+
+1. On first launch you'll be prompted to enter your **Pogly module name** (e.g. `chippy`)
+2. The app constructs the URL automatically: `https://cloud.pogly.gg/overlay?module=<name>`
+3. The overlay loads fullscreen, transparent, and click-through — it won't interfere with your game
 
 ### Controls
-- **🔄 Toggle Overlay**: Press your configured hotkey (default: F24)
-- **🔗 Change URL**: Right-click tray icon → Change URL
-- **⌨️ Change Hotkey**: Right-click tray icon → Change Hotkey
-- **�밝 Adjust Opacity**: Right-click tray icon → Opacity
-- **❌ Exit**: Right-click tray icon → Exit
 
-### System Tray
-The app runs quietly in your system tray. Double-click the tray icon to toggle the overlay.
+| Action | How |
+|---|---|
+| Toggle overlay visibility | Press `Insert` (default) or your configured hotkey |
+| Change module | Right-click tray icon → Change Pogly Module |
+| Change hotkey | Right-click tray icon → Change Hotkey |
+| Adjust opacity | Right-click tray icon → Opacity |
+| Reset all settings | Right-click tray icon → Reset Settings |
+| Exit | Right-click tray icon → Exit |
 
-## 🚀 Getting Started
+Double-clicking the tray icon also toggles the overlay.
+
+> **Stream Deck tip:** Add a Hotkey button and bind it to `Insert` (or whatever you configure) for one-tap toggling.
+
+## Building from Source
 
 ### Prerequisites
 
 - Node.js
-- npm or yarn
+- npm
 
 ### Installation
 
-1. Clone the repository:
 ```bash
-git clone https://github.com/mopoIo/Simple-Website-Overlay-App
-cd Simple-Website-Overlay-App-1.0.0
-```
-
-2. Install dependencies:
-```bash
+git clone https://github.com/PoglyApp/pogly-desktop-overlay
+cd pogly-desktop-overlay
 npm install
-```
-
-3. Start the application:
-```bash
 npm start
 ```
 
-## 🛠️ Technical Details
+### Build for distribution
 
-### Project Structure
-```
-├── src/
-│   ├── dialogs.js     # URL and hotkey prompts
-│   ├── shortcuts.js   # Global shortcuts
-│   ├── tray.js       # System tray menu
-│   ├── webContent.js # Content scaling
-│   └── window.js     # Main window setup
-├── main.js           # Entry point
-├── preload.js        # IPC bridge
-└── package.json
-```
-
-### Configuration
-Settings are automatically saved between sessions:
-- `url`: Overlay website URL
-- `hotkey`: Toggle shortcut key
-- `opacity`: Window transparency
-
-## 🔧 Development
-
-To build for distribution:
 ```bash
 npm run build
 ```
 
-## 📝 License
+## Technical Details
 
-[MIT License](LICENSE)
+### Project Structure
 
-## 💡 Contributing
+```
+├── src/
+│   ├── dialogs.js     # Module name and hotkey prompts
+│   ├── shortcuts.js   # Global hotkey registration
+│   ├── tray.js        # System tray menu
+│   ├── webContent.js  # Content scaling (1920x1080 → native resolution)
+│   └── window.js      # Main overlay window setup
+├── main.js            # Entry point and IPC handlers
+├── preload.js         # IPC bridge
+└── package.json
+```
 
-Contributions are welcome! Feel free to:
-1. Fork the repository
-2. Create a feature branch
-3. Submit a Pull Request
+### Notes
 
-## 🐛 Found a Bug?
+- The overlay window is scaled from a fixed 1920×1080 canvas to fit your actual screen resolution. This matches how Pogly Cloud renders its canvas.
+- Settings (module URL, hotkey, opacity) are persisted automatically between sessions via `electron-store`.
 
-Please open an issue with:
-- Expected behavior
-- Actual behavior
-- Steps to reproduce
+## License
 
----
-
-Made with ❤️ using Electron
+MIT

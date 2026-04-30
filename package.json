@@ -1,17 +1,17 @@
 {
-  "name": "overlay-app",
+  "name": "pogly-desktop-overlay",
   "version": "1.0.0",
-  "description": "Overlay App",
+  "description": "Pogly Desktop Overlay",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder"
   },
   "build": {
-    "appId": "com.overlay.app",
+    "appId": "gg.pogly.overlay",
     "win": {
       "target": "portable",
-      "icon": "icon.ico"
+      "icon": "pogly.ico"
     }
   },
   "dependencies": {

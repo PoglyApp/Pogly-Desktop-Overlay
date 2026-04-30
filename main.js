@@ -1,17 +1,18 @@
 const { app, ipcMain, globalShortcut } = require('electron')
 const { createWindow } = require('./src/window')
 const { setupTray } = require('./src/tray')
-const { setupShortcuts } = require('./src/shortcuts')
+const { setupShortcuts, registerHotkey } = require('./src/shortcuts')
 const Store = require('electron-store')
 
 const store = new Store()
 let mainWindow = null
 let tray = null
+let toggleOverlay = null
 
 // Initialize default settings
-if (!store.get('hotkey')) store.set('hotkey', 'F24')
+if (!store.get('hotkey')) store.set('hotkey', 'Insert')
 if (!store.get('url')) store.set('url', '')
-if (!store.get('opacity')) store.set('opacity', 0.5)
+if (!store.get('opacity')) store.set('opacity', 1)
 
 // Handle URL changes
 ipcMain.on('set-url', (event, newUrl) => {
@@ -23,30 +24,18 @@ ipcMain.on('set-url', (event, newUrl) => {
 
 // Handle hotkey changes
 ipcMain.on('set-hotkey', (event, newHotkey) => {
-  const currentHotkey = store.get('hotkey')
-  // Unregister old hotkey
-  globalShortcut.unregister(currentHotkey)
-  
-  // Register new hotkey
+  globalShortcut.unregister(store.get('hotkey'))
   store.set('hotkey', newHotkey)
-  globalShortcut.register(newHotkey, () => {
-    if (mainWindow) {
-      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
-    }
-    return true
-  })
-  
-  // Update tray - destroy old one first
-  if (tray) {
-    tray.destroy()
-  }
+  registerHotkey(newHotkey, toggleOverlay)
+
+  if (tray) tray.destroy()
   tray = setupTray(mainWindow, store)
 })
 
 app.whenReady().then(() => {
   mainWindow = createWindow(store)
   tray = setupTray(mainWindow, store)
-  setupShortcuts(mainWindow, store)
+  toggleOverlay = setupShortcuts(mainWindow, store)
 })
 
 app.on('will-quit', () => {

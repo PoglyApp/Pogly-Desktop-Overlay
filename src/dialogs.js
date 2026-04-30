@@ -1,10 +1,19 @@
 const { BrowserWindow } = require('electron')
 const path = require('path')
 
+function getModuleFromUrl(url) {
+  try {
+    const params = new URLSearchParams(new URL(url).search);
+    return params.get('module') || '';
+  } catch (_) {
+    return '';
+  }
+}
+
 function promptForUrl(store, mainWindow) {
   const urlWindow = new BrowserWindow({
     width: 500,
-    height: 200,
+    height: 220,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -17,15 +26,16 @@ function promptForUrl(store, mainWindow) {
     maximizable: false,
     alwaysOnTop: true,
     minWidth: 400,
-    minHeight: 200
+    minHeight: 220
   })
 
   const currentUrl = store.get('url')
+  const currentModule = getModuleFromUrl(currentUrl)
   const htmlContent = encodeURIComponent(`
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Enter Overlay URL</title>
+        <title>Enter Pogly Module</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
       <body>
@@ -35,8 +45,8 @@ function promptForUrl(store, mainWindow) {
             margin: 0;
             padding: 0;
           }
-          
-          body { 
+
+          body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             padding: 24px;
             margin: 0;
@@ -45,31 +55,26 @@ function promptForUrl(store, mainWindow) {
             height: 100vh;
             overflow: hidden;
           }
-          
+
           .container {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
           }
-          
-          h3 { 
+
+          h3 {
             color: #1a1a1a;
             font-size: 16px;
             font-weight: 600;
           }
-          
+
           .input-group {
             display: flex;
             gap: 8px;
             width: 100%;
           }
-          
-          .input-wrapper {
-            position: relative;
-            flex-grow: 1;
-          }
-          
-          input { 
+
+          input {
             width: 100%;
             padding: 10px 12px;
             border: 1px solid #ddd;
@@ -77,100 +82,101 @@ function promptForUrl(store, mainWindow) {
             font-size: 14px;
             transition: all 0.2s ease;
           }
-          
+
           input:focus {
             outline: none;
-            border-color: #2196F3;
-            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+            border-color: #6441a5;
+            box-shadow: 0 0 0 3px rgba(100, 65, 165, 0.12);
           }
-          
+
+          .url-preview {
+            font-size: 11px;
+            color: #888;
+            word-break: break-all;
+            min-height: 16px;
+          }
+
+          .url-preview span {
+            color: #6441a5;
+            font-weight: 500;
+          }
+
+          .actions {
+            display: flex;
+            justify-content: flex-end;
+          }
+
           button {
-            padding: 10px 16px;
+            padding: 10px 20px;
             border: none;
             border-radius: 6px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 44px;
-          }
-          
-          .toggle-visibility {
-            background: #f0f0f0;
-            color: #666;
-          }
-          
-          .toggle-visibility:hover {
-            background: #e0e0e0;
-          }
-          
-          .save-button {
-            background: #2196F3;
+            background: #6441a5;
             color: white;
-            margin-left: auto;
-          }
-          
-          .save-button:hover {
-            background: #1976D2;
           }
 
-          .icon {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
+          button:hover {
+            background: #503289;
+          }
+
+          button:disabled {
+            background: #ccc;
+            cursor: default;
           }
         </style>
 
         <div class="container">
-          <h3>Enter Overlay URL</h3>
+          <h3>Enter Pogly Module Name</h3>
           <div class="input-group">
-            <div class="input-wrapper">
-              <input 
-                type="password" 
-                id="url" 
-                value="${currentUrl || ''}" 
-                placeholder="https://your-overlay-url.com"
-                spellcheck="false"
-                autocomplete="off"
-              >
-            </div>
-            <button class="toggle-visibility" id="toggleVisibility" title="Toggle visibility">
-              <svg class="icon" viewBox="0 0 24 24" id="visibilityIcon">
-                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-              </svg>
-            </button>
+            <input
+              type="text"
+              id="moduleName"
+              value="${currentModule}"
+              placeholder="e.g. chippy"
+              spellcheck="false"
+              autocomplete="off"
+              autofocus
+            >
           </div>
-          <button class="save-button" onclick="submit()">Save</button>
+          <div class="url-preview" id="preview"></div>
+          <div class="actions">
+            <button id="saveBtn" onclick="submit()">Connect</button>
+          </div>
         </div>
 
         <script>
-          let isVisible = false;
-          const urlInput = document.getElementById('url');
-          const toggleButton = document.getElementById('toggleVisibility');
-          const visibilityIcon = document.getElementById('visibilityIcon');
+          const BASE_URL = 'https://cloud.pogly.gg/overlay?module=';
+          const input = document.getElementById('moduleName');
+          const preview = document.getElementById('preview');
+          const saveBtn = document.getElementById('saveBtn');
 
-          function toggleVisibility() {
-            isVisible = !isVisible;
-            urlInput.type = isVisible ? 'text' : 'password';
-            visibilityIcon.innerHTML = isVisible 
-              ? '<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>'
-              : '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
-          }
-
-          function submit() {
-            const url = urlInput.value.trim();
-            if (url) {
-              window.electronAPI.setUrl(url);
+          function updatePreview() {
+            const name = input.value.trim();
+            if (name) {
+              preview.innerHTML = BASE_URL + '<span>' + name + '</span>';
+              saveBtn.disabled = false;
+            } else {
+              preview.textContent = '';
+              saveBtn.disabled = true;
             }
           }
 
-          toggleButton.addEventListener('click', toggleVisibility);
-          urlInput.addEventListener('keypress', function(e) {
+          function submit() {
+            const name = input.value.trim();
+            if (!name) return;
+            window.electronAPI.setUrl(BASE_URL + name);
+            window.close();
+          }
+
+          input.addEventListener('input', updatePreview);
+          input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') submit();
           });
+
+          updatePreview();
         </script>
       </body>
     </html>
