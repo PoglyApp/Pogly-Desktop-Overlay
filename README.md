@@ -8,7 +8,7 @@
 </p>
 <p align="center">
     <p style="font-style: italic; line-height: 0" align="center">
-        Desktop Overlay — display your Pogly module directly on screen
+        Pogly Desktop Overlay — display your Pogly module directly on screen
     </p>
 </p>
 
