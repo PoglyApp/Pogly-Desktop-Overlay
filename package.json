@@ -9,9 +9,14 @@
   },
   "build": {
     "appId": "gg.pogly.overlay",
+    "productName": "Pogly Desktop Overlay",
+    "directories": {
+      "output": "dist"
+    },
     "win": {
       "target": "portable",
-      "icon": "pogly.ico"
+      "icon": "pogly.ico",
+      "artifactName": "pogly-desktop-overlay-${version}.exe"
     }
   },
   "dependencies": {
