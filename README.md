@@ -7,12 +7,6 @@
     </a>
 </p>
 <p align="center">
-    <a href="https://pogly.gg#gh-dark-mode-only" target="_blank">
-        <img width="250" src="./images/dark/pogly-text.png" alt="Pogly">
-    </a>
-    <a href="https://pogly.gg#gh-light-mode-only" target="_blank">
-        <img width="250" src="./images/light/pogly-text.png" alt="Pogly">
-    </a>
     <p style="font-style: italic; line-height: 0" align="center">
         Desktop Overlay — display your Pogly module directly on screen
     </p>
