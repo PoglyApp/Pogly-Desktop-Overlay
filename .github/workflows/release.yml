@@ -20,7 +20,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npx electron-builder --win --publish never
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
