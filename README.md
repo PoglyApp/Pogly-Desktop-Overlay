@@ -1,16 +1,12 @@
 <p align="center">
     <a href="https://pogly.gg#gh-dark-mode-only" target="_blank">
-	<img width="128" src="./images/dark/Pog.png" alt="Pogly Logo">
+        <img width="350" src="./images/dark/logo.png" alt="Pogly">
     </a>
     <a href="https://pogly.gg#gh-light-mode-only" target="_blank">
-	<img width="128" src="./images/light/Pog.png" alt="Pogly Logo">
+        <img width="350" src="./images/light/logo.png" alt="Pogly">
     </a>
 </p>
-<p align="center">
-    <p style="font-style: italic; line-height: 0" align="center">
-        Pogly Desktop Overlay — display your Pogly module directly on screen
-    </p>
-</p>
+<p align="center"><em>Desktop Overlay — display your Pogly module directly on screen</em></p>
 
 <p align="center">
     <a href="https://github.com/PoglyApp/pogly-cloud"><img src="https://img.shields.io/badge/built_for-Pogly_Cloud-6441a5.svg?style=flat-square" /></a>
