@@ -30,5 +30,32 @@ jobs:
         with:
           name: Pogly Desktop Overlay ${{ github.ref_name }}
           files: dist/pogly-desktop-overlay-*.exe
+          body: |
+            ## Pogly Desktop Overlay
+
+            Display your [Pogly](https://pogly.gg) module as a transparent, click-through overlay directly on your desktop — no OBS required.
+
+            ## Installation
+
+            1. Download the `.exe` below
+            2. Run it — no installation needed, it's portable
+            3. On first launch, enter your **Pogly module name** (e.g. `chippy`)
+            4. The overlay will appear fullscreen and click-through
+
+            ## Usage
+
+            | Action | How |
+            |---|---|
+            | Toggle overlay | Press `Insert` (default) |
+            | Change module | Right-click tray icon → Change Pogly Module |
+            | Change hotkey | Right-click tray icon → Change Hotkey |
+            | Adjust opacity | Right-click tray icon → Opacity |
+            | Reset settings | Right-click tray icon → Reset Settings |
+
+            > The app runs in your system tray. Double-click the tray icon to toggle the overlay at any time.
+
+            ## Need help?
+
+            Join us on [Discord](https://discord.gg/pogly) — we're happy to help get you set up.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
