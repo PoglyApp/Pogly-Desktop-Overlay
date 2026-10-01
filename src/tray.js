@@ -51,7 +51,7 @@ function setupTray(mainWindow, store) {
       },
       { type: 'separator' },
       {
-        label: 'Change Pogly Module',
+        label: 'Change Overlay URL',
         click: () => promptForUrl(store, mainWindow)
       },
       {

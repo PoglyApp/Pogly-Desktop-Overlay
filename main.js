@@ -2,6 +2,7 @@ const { app, ipcMain, globalShortcut } = require('electron')
 const { createWindow } = require('./src/window')
 const { setupTray } = require('./src/tray')
 const { setupShortcuts, registerHotkey } = require('./src/shortcuts')
+const { isOverlayUrl, withOverlayParams } = require('./src/overlayUrl')
 const Store = require('electron-store')
 
 const store = new Store()
@@ -16,9 +17,10 @@ if (!store.get('opacity')) store.set('opacity', 1)
 
 // Handle URL changes
 ipcMain.on('set-url', (event, newUrl) => {
-  store.set('url', newUrl)
+  if (!isOverlayUrl(newUrl)) return
+  store.set('url', newUrl.trim())
   if (mainWindow) {
-    mainWindow.loadURL(newUrl)
+    mainWindow.loadURL(withOverlayParams(newUrl))
   }
 })
 

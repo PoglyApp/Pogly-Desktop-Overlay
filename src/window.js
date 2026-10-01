@@ -1,6 +1,7 @@
 const { BrowserWindow, screen } = require('electron')
 const { promptForUrl } = require('./dialogs')
 const { setupWebContent } = require('./webContent')
+const { isOverlayUrl, withOverlayParams } = require('./overlayUrl')
 
 function createWindow(store) {
   const primaryDisplay = screen.getPrimaryDisplay()
@@ -29,8 +30,8 @@ function createWindow(store) {
   })
 
   const currentUrl = store.get('url')
-  if (currentUrl) {
-    window.loadURL(currentUrl)
+  if (isOverlayUrl(currentUrl)) {
+    window.loadURL(withOverlayParams(currentUrl))
   } else {
     promptForUrl(store, window)
   }

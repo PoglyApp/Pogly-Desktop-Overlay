@@ -39,15 +39,16 @@ jobs:
 
             1. Download the `.exe` below
             2. Run it — no installation needed, it's portable
-            3. On first launch, enter your **Pogly module name** (e.g. `chippy`)
-            4. The overlay will appear fullscreen and click-through
+            3. In Pogly, open **settings** and click **copy overlay url**
+            4. Paste it into the prompt on first launch
+            5. The overlay will appear fullscreen and click-through, scaled to your screen
 
             ## Usage
 
             | Action | How |
             |---|---|
             | Toggle overlay | Press `Insert` (default) |
-            | Change module | Right-click tray icon → Change Pogly Module |
+            | Change overlay | Right-click tray icon → Change Overlay URL |
             | Change hotkey | Right-click tray icon → Change Hotkey |
             | Adjust opacity | Right-click tray icon → Opacity |
             | Reset settings | Right-click tray icon → Reset Settings |

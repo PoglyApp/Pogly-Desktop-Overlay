@@ -1,19 +1,11 @@
-const { BrowserWindow } = require('electron')
+const { BrowserWindow, clipboard } = require('electron')
 const path = require('path')
-
-function getModuleFromUrl(url) {
-  try {
-    const params = new URLSearchParams(new URL(url).search);
-    return params.get('module') || '';
-  } catch (_) {
-    return '';
-  }
-}
+const { isOverlayUrl } = require('./overlayUrl')
 
 function promptForUrl(store, mainWindow) {
   const urlWindow = new BrowserWindow({
-    width: 500,
-    height: 220,
+    width: 520,
+    height: 300,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -25,17 +17,20 @@ function promptForUrl(store, mainWindow) {
     minimizable: false,
     maximizable: false,
     alwaysOnTop: true,
-    minWidth: 400,
-    minHeight: 220
+    minWidth: 420,
+    minHeight: 300
   })
 
-  const currentUrl = store.get('url')
-  const currentModule = getModuleFromUrl(currentUrl)
+  // Prefill with the saved URL, or with the clipboard when the user already copied one
+  const savedUrl = store.get('url')
+  const clipboardUrl = clipboard.readText().trim()
+  const initialUrl = isOverlayUrl(savedUrl) ? savedUrl : isOverlayUrl(clipboardUrl) ? clipboardUrl : ''
+
   const htmlContent = encodeURIComponent(`
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Enter Pogly Module</title>
+        <title>Pogly Overlay URL</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
       <body>
@@ -59,7 +54,7 @@ function promptForUrl(store, mainWindow) {
           .container {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
           }
 
           h3 {
@@ -68,10 +63,16 @@ function promptForUrl(store, mainWindow) {
             font-weight: 600;
           }
 
-          .input-group {
-            display: flex;
-            gap: 8px;
-            width: 100%;
+          ol {
+            font-size: 13px;
+            color: #444;
+            padding-left: 18px;
+            line-height: 1.6;
+          }
+
+          b {
+            color: #1a1a1a;
+            font-weight: 600;
           }
 
           input {
@@ -79,7 +80,7 @@ function promptForUrl(store, mainWindow) {
             padding: 10px 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.2s ease;
           }
 
@@ -89,16 +90,14 @@ function promptForUrl(store, mainWindow) {
             box-shadow: 0 0 0 3px rgba(100, 65, 165, 0.12);
           }
 
-          .url-preview {
-            font-size: 11px;
-            color: #888;
-            word-break: break-all;
-            min-height: 16px;
+          input.invalid {
+            border-color: #d9534f;
           }
 
-          .url-preview span {
-            color: #6441a5;
-            font-weight: 500;
+          .error {
+            font-size: 11px;
+            color: #d9534f;
+            min-height: 14px;
           }
 
           .actions {
@@ -129,54 +128,56 @@ function promptForUrl(store, mainWindow) {
         </style>
 
         <div class="container">
-          <h3>Enter Pogly Module Name</h3>
-          <div class="input-group">
-            <input
-              type="text"
-              id="moduleName"
-              value="${currentModule}"
-              placeholder="e.g. chippy"
-              spellcheck="false"
-              autocomplete="off"
-              autofocus
-            >
-          </div>
-          <div class="url-preview" id="preview"></div>
+          <h3>Paste your Pogly overlay URL</h3>
+          <ol>
+            <li>In Pogly, open <b>settings</b> and click <b>copy overlay url</b></li>
+            <li>Paste it below (Ctrl+V)</li>
+          </ol>
+          <input
+            type="text"
+            id="overlayUrl"
+            placeholder="https://cloud.pogly.gg/overlay?module=..."
+            spellcheck="false"
+            autocomplete="off"
+            autofocus
+          >
+          <div class="error" id="error"></div>
           <div class="actions">
             <button id="saveBtn" onclick="submit()">Connect</button>
           </div>
         </div>
 
         <script>
-          const BASE_URL = 'https://cloud.pogly.gg/overlay?module=';
-          const input = document.getElementById('moduleName');
-          const preview = document.getElementById('preview');
+          ${isOverlayUrl.toString()}
+
+          const input = document.getElementById('overlayUrl');
+          const error = document.getElementById('error');
           const saveBtn = document.getElementById('saveBtn');
 
-          function updatePreview() {
-            const name = input.value.trim();
-            if (name) {
-              preview.innerHTML = BASE_URL + '<span>' + name + '</span>';
-              saveBtn.disabled = false;
-            } else {
-              preview.textContent = '';
-              saveBtn.disabled = true;
-            }
+          function validate() {
+            const value = input.value.trim();
+            const valid = isOverlayUrl(value);
+            const showError = value !== '' && !valid;
+            input.classList.toggle('invalid', showError);
+            error.textContent = showError ? "That isn't a Pogly overlay URL, it should look like https://cloud.pogly.gg/overlay?module=..." : '';
+            saveBtn.disabled = !valid;
+            return valid;
           }
 
           function submit() {
-            const name = input.value.trim();
-            if (!name) return;
-            window.electronAPI.setUrl(BASE_URL + name);
+            if (!validate()) return;
+            window.electronAPI.setUrl(input.value.trim());
             window.close();
           }
 
-          input.addEventListener('input', updatePreview);
+          input.addEventListener('input', validate);
           input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') submit();
           });
 
-          updatePreview();
+          input.value = ${JSON.stringify(initialUrl).replace(/</g, '\\u003c')};
+          input.select();
+          validate();
         </script>
       </body>
     </html>

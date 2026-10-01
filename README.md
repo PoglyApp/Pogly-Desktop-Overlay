@@ -40,8 +40,8 @@ Grab the latest release from the [releases page](https://github.com/PoglyApp/pog
 
 ### First Launch
 
-1. On first launch you'll be prompted to enter your **Pogly module name** (e.g. `chippy`)
-2. The app constructs the URL automatically: `https://cloud.pogly.gg/overlay?module=<name>`
+1. In Pogly, open **settings** and click **copy overlay url**
+2. On first launch, paste it into the prompt (if it's already on your clipboard it's filled in for you)
 3. The overlay loads fullscreen, transparent, and click-through — it won't interfere with your game
 
 ### Controls
@@ -49,7 +49,7 @@ Grab the latest release from the [releases page](https://github.com/PoglyApp/pog
 | Action | How |
 |---|---|
 | Toggle overlay visibility | Press `Insert` (default) or your configured hotkey |
-| Change module | Right-click tray icon → Change Pogly Module |
+| Change overlay | Right-click tray icon → Change Overlay URL |
 | Change hotkey | Right-click tray icon → Change Hotkey |
 | Adjust opacity | Right-click tray icon → Opacity |
 | Reset all settings | Right-click tray icon → Reset Settings |
@@ -87,7 +87,8 @@ npm run build
 
 ```
 ├── src/
-│   ├── dialogs.js     # Module name and hotkey prompts
+│   ├── dialogs.js     # Overlay URL and hotkey prompts
+│   ├── overlayUrl.js  # Overlay URL validation and params
 │   ├── shortcuts.js   # Global hotkey registration
 │   ├── tray.js        # System tray menu
 │   ├── webContent.js  # Content scaling (1920x1080 → native resolution)
@@ -99,8 +100,9 @@ npm run build
 
 ### Notes
 
-- The overlay window is scaled from a fixed 1920×1080 canvas to fit your actual screen resolution. This matches how Pogly Cloud renders its canvas.
-- Settings (module URL, hotkey, opacity) are persisted automatically between sessions via `electron-store`.
+- The overlay renders at 1920×1080 (the default Pogly layout resolution) and is zoomed to fill your screen, e.g. 1440p or 4K. On screens that aren't 16:9 it's scaled to fit and centered.
+- `warn=0` is always added to the overlay URL, since the zoomed overlay would otherwise show Pogly's resolution mismatch warning.
+- Settings (overlay URL, hotkey, opacity) are persisted automatically between sessions via `electron-store`.
 
 ## License
 
