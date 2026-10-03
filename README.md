@@ -52,6 +52,7 @@ Grab the latest release from the [releases page](https://github.com/PoglyApp/pog
 | Change overlay | Right-click tray icon → Change Overlay URL |
 | Change hotkey | Right-click tray icon → Change Hotkey |
 | Adjust opacity | Right-click tray icon → Opacity |
+| Mute / unmute audio (muted by default) | Right-click tray icon → Mute Audio |
 | Reset all settings | Right-click tray icon → Reset Settings |
 | Exit | Right-click tray icon → Exit |
 

@@ -19,14 +19,24 @@ function setupTray(mainWindow, store) {
     }
   }
 
+  function setMuted(muted) {
+    if (mainWindow) {
+      mainWindow.webContents.setAudioMuted(muted)
+      store.set('muted', muted)
+      tray.setContextMenu(buildMenu())
+    }
+  }
+
   function resetSettings() {
     globalShortcut.unregisterAll()
     store.clear()
     store.set('hotkey', 'Insert')
     store.set('url', '')
     store.set('opacity', 1)
+    store.set('muted', true)
     if (mainWindow) {
       mainWindow.setOpacity(1)
+      mainWindow.webContents.setAudioMuted(true)
       mainWindow.hide()
     }
     registerHotkey('Insert', toggleWindowVisibility)
@@ -48,6 +58,12 @@ function setupTray(mainWindow, store) {
           { label: '75%', type: 'radio', checked: store.get('opacity') === 0.75, click: () => setOpacity(0.75) },
           { label: '100%', type: 'radio', checked: store.get('opacity') === 1, click: () => setOpacity(1) }
         ]
+      },
+      {
+        label: 'Mute Audio',
+        type: 'checkbox',
+        checked: store.get('muted'),
+        click: (item) => setMuted(item.checked)
       },
       { type: 'separator' },
       {

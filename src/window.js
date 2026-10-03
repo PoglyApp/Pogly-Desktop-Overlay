@@ -37,7 +37,7 @@ function createWindow(store) {
   }
   
   window.setIgnoreMouseEvents(true)
-  window.webContents.setAudioMuted(true)
+  window.webContents.setAudioMuted(store.get('muted'))
   window.webContents.on('did-finish-load', () => setupWebContent(window))
 
   return window

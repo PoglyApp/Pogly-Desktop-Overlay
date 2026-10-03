@@ -5,6 +5,10 @@ const { setupShortcuts, registerHotkey } = require('./src/shortcuts')
 const { isOverlayUrl, withOverlayParams } = require('./src/overlayUrl')
 const Store = require('electron-store')
 
+// The overlay window is click-through and never focused, so it can never receive the user gesture
+// Chromium requires before media may play with sound
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
+
 const store = new Store()
 let mainWindow = null
 let tray = null
@@ -14,6 +18,7 @@ let toggleOverlay = null
 if (!store.get('hotkey')) store.set('hotkey', 'Insert')
 if (!store.get('url')) store.set('url', '')
 if (!store.get('opacity')) store.set('opacity', 1)
+if (typeof store.get('muted') !== 'boolean') store.set('muted', true)
 
 // Handle URL changes
 ipcMain.on('set-url', (event, newUrl) => {
